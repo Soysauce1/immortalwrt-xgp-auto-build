@@ -1,7 +1,7 @@
+#!/bin/bash
 # 只更新正常的子模块，跳过有问题的xgp-v3-screen
 git submodule update --init --recursive -- zz-packages/kmod-fb-tft-gc9307 zz-packages/others/*
 
-#!/bin/bash
 id
 df -h
 free -h
@@ -9,7 +9,7 @@ cat /proc/cpuinfo
 
 echo "update submodules"
 # git submodule update --init --recursive --remote || { echo "submodule update failed"; exit 1; }
-git submodule update --init --recursive || { echo "submodule init failed"; exit 1; }
+# git submodule update --init --recursive || { echo "submodule init failed"; exit 1; }
 
 if [ -d "immortalwrt" ]; then
     echo "repo dir exists"
