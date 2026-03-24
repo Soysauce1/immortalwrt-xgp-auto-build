@@ -1,19 +1,8 @@
 name: Build and Release
-
 on:
   schedule:
     - cron: '0 18 * * 4'
   workflow_dispatch:
-    # inputs:
-    #   tag_name:
-    #     description: 'Tag name (e.g., v1.0.0)'
-    #     required: true
-  # push:
-  #   branches:
-  #     - main
-  #   tags:
-  #     - '*'
-
 jobs:
   build:
     runs-on: ubuntu-24.04
@@ -49,6 +38,9 @@ jobs:
           free -h
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+          fetch-depth: 0
       - name: Setup environment
         run: |
           sudo ./install-env.sh
@@ -99,6 +91,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          submodules: 'recursive'
           fetch-depth: 0
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -127,35 +120,35 @@ jobs:
           echo "" >> release_info.md
           PREVIOUS_TAG=$(git describe --tags --abbrev=0 HEAD^ 2>/dev/null || echo "")
           if [ -n "$PREVIOUS_TAG" ]; then
-              echo "<details>" >> release_info.md
-              echo "<summary>本仓库变更 (${PREVIOUS_TAG}..${new_tag})</summary>" >> release_info.md
-              echo "" >> release_info.md
-              git log --pretty=format:"%h %s" ${PREVIOUS_TAG}..HEAD >> release_info.md
-              echo "" >> release_info.md
-              echo "</details>" >> release_info.md
+            echo "<details>" >> release_info.md
+            echo "<summary>本仓库变更 (${PREVIOUS_TAG}..${new_tag})</summary>" >> release_info.md
+            echo "" >> release_info.md
+            git log --pretty=format:"%h %s" ${PREVIOUS_TAG}..HEAD >> release_info.md
+            echo "" >> release_info.md
+            echo "</details>" >> release_info.md
           fi
           echo "<details>" >> release_info.md
           echo "<summary>ImmortalWrt最近变更</summary>" >> release_info.md
           echo "" >> release_info.md
-          echo "\`\`\`" >> release_info.md
+          echo "```" >> release_info.md
           cat release_assets/recent_git.log >> release_info.md
-          echo "\`\`\`" >> release_info.md
+          echo "```" >> release_info.md
           echo "" >> release_info.md
           echo "</details>" >> release_info.md
           echo "<details>" >> release_info.md
           echo "<summary>内置软件包列表</summary>" >> release_info.md
           echo "" >> release_info.md
-          echo "\`\`\`" >> release_info.md
+          echo "```" >> release_info.md
           cat release_assets/immortalwrt-rockchip-armv8-nlnet_xiguapi-v3.manifest >> release_info.md
-          echo "\`\`\`" >> release_info.md
+          echo "```" >> release_info.md
           echo "" >> release_info.md
           echo "</details>" >> release_info.md
           echo "<details>" >> release_info.md
           echo "<summary>文件哈希</summary>" >> release_info.md
           echo "" >> release_info.md
-          echo "\`\`\`" >> release_info.md
+          echo "```" >> release_info.md
           cat release_assets/sha256sums >> release_info.md
-          echo "\`\`\`" >> release_info.md
+          echo "```" >> release_info.md
           echo "" >> release_info.md
           echo "</details>" >> release_info.md
       - name: Create new tag
@@ -170,7 +163,6 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.release-prepare.outputs.new_tag }}
-          # tag_name: ${{ inputs.tag_name }}
           name: ${{ steps.release-prepare.outputs.RELEASE_TITLE }}
           body_path: release_info.md
           prerelease: true
