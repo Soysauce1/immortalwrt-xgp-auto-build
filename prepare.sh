@@ -81,3 +81,7 @@ fi
 # if [ -f "feeds/packages/lang/rust/Makefile" ]; then
 #     sed -i 's/download-ci-llvm=true/download-ci-llvm=false/g' "feeds/packages/lang/rust/Makefile"
 # fi
+
+# 强制替换新版xgp-v3-screen屏幕插件
+rm -rf package/zz-packages/xgp-v3-screen
+git clone --depth=1 https://github.com/Soysauce1/xgp-v3-screen.git package/zz-packages/xgp-v3-screen
