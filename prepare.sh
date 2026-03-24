@@ -1,3 +1,6 @@
+# 只更新正常的子模块，跳过有问题的xgp-v3-screen
+git submodule update --init --recursive -- zz-packages/kmod-fb-tft-gc9307 zz-packages/others/*
+
 #!/bin/bash
 id
 df -h
