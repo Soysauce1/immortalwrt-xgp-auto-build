@@ -39,7 +39,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 0
       - name: Setup environment
         run: |
@@ -91,7 +90,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          submodules: 'recursive'
           fetch-depth: 0
       - name: Download artifacts
         uses: actions/download-artifact@v4
